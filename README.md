@@ -1,4 +1,7 @@
 # Checkers
-Checkers Game created by me (Aidan Carrier!) in C++ using SFML.
-It has a few bugs that i incorporated as a feature, so its pretty cool in my opinion. 
-Its a fun experience!
+
+A checkers game written in C++ using SFML (Visual Studio).
+
+Built for fun -- it has a few quirks I decided to keep as features.
+
+Created December 2021.
