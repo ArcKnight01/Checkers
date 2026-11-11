@@ -51,6 +51,8 @@ int main()
 	for (Piece& p : checker) {
 		checkerPtr.push_back(&p);
 	}
+	//tracks captured pieces; they stay in the vector so the pointers in checkerPtr remain valid
+	std::vector<bool> removed(checker.size(), false);
 
 	// Run the Program while the Window is Open
 	while (window.isOpen())
@@ -105,13 +107,16 @@ int main()
 		}
 
 		//Iterate through all checker pieces (checker.size is the amount of checkers)
-		for (int i = 0; i < checker.size(); i++) { 
+		for (int i = 0; i < checker.size(); i++) {
+			if (removed[i]) continue; //skip pieces that were already captured
 			checker[i].update(checkerPtr); //update each piece
-			checker[i].drawPiece(window); //draw each piece
 			if (checker[i].alive == false) {
 				declareWinner = GameHandler.losePiece(checker[i].color);
-				checker.erase(checker.begin() + i);
+				//don't erase: erasing shifts the vector and leaves a dangling pointer in checkerPtr
+				removed[i] = true;
+				continue;
 			}
+			checker[i].drawPiece(window); //draw each piece
 		}
 		//Display message if losePiece returns true
 		if (declareWinner) {
