@@ -59,6 +59,49 @@ The square in the top-left corner shows whose turn it is.
 
 ---
 
+## How the code works
+
+```
+Checkers/
+  Checkers.cpp     main(): window, creates the board, game and 24 pieces, runs the game loop
+  board.h/.cpp     class Board: the 8×8 grid, which tile was clicked, drawing the squares
+  game.h/.cpp      class Game: whose turn it is, piece counts, the victory message
+  piece.h/.cpp     class Piece: one checker; selecting, moving, jumping, kinging
+  stdafx.h/.cpp, targetver.h   Visual Studio leftovers (precompiled-header template)
+  piece CPP.txt    an older backup copy of piece.cpp
+  Assets/arial.ttf font for the victory message
+```
+
+**Tiles are numbered 0–63**, left to right then top to bottom, so tile `i` is at column `i % 8`, row `i / 8`. Moves are
+tile-number arithmetic: one row down-left is `+7`, down-right `+9`, and a jump is double that (`+14`, `+18`). Up is the same
+with minus.
+
+**`main()` (Checkers.cpp)**
+1. Creates the `Board` (800×800, 8×8), the `Game` (12 pieces per team) and 24 `Piece`s in a `std::vector<Piece> checker`.
+   Red start on the top three rows, white on the bottom three: `spawnPos` picks the dark squares, and white is mirrored with
+   `tileCount - 1 - spawnPos`.
+2. Builds `checkerPtr`, a list of **pointers** to those pieces. Each piece gets it so it can check where the others are.
+3. Every frame: reads the mouse click (`getTileN` turns the click into a tile number), draws the board and the turn indicator,
+   then calls `update()` and `drawPiece()` on every live piece. A captured piece is counted (`losePiece`) and skipped from then
+   on, and the victory text shows when a team runs out.
+
+**`Board`**: `tileTypes` marks each square `black` (playable) or `white`. `getTileN(x, y)` converts pixels to a tile number;
+`getTilePos(n)` converts a tile number to pixels. `newClick`, `clickPos` and `pieceJumping` are shared flags the pieces read.
+
+**`Game`**: `turncolor` is whose turn it is (`redteam` / `whiteteam`), and `changeTurn()` flips it and recolours the square in
+the top-left corner. `pieceTotal[]` counts pieces left; `losePiece()` returns `true` when a team hits 0.
+
+**`Piece`**: holds pointers back to the board and game (`boardref`, `gameref`), its `position` (tile number), `color`, and the
+flags `alive`, `selected` and `kinged`.
+- `selectPiece()`: clicking your own piece on your turn selects it (green outline); clicking it again deselects it, or ends your
+  turn after a jump.
+- `placePiece()`: with a piece selected, a click on an empty dark square is checked against the legal moves. Red moves down,
+  white moves up, kings both ways. A jump sets the jumped piece's `alive = false` and lets you keep jumping
+  (`pieceJumping`). Reaching the far row kings the piece.
+- `drawPiece()`: draws the circle, an inner ring, and a crown (`kingShape`) for kings.
+
+---
+
 ## Notes for building outside Visual Studio
 These small changes made the code build with g++ as well as MSVC:
 - `stdafx.h` includes the Windows-only `targetver.h` / `<tchar.h>` only when `_WIN32` is defined.
