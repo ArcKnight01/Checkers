@@ -81,7 +81,7 @@ int main()
 			}
 			/* DEFINE EVENTS (i.e. KEY PRESS & RELEASE) HERE */
 			if (event.type == sf::Event::MouseButtonPressed) {
-				if (event.key.code == sf::Mouse::Left) {
+				if (event.mouseButton.button == sf::Mouse::Left) {
 					//Register a new mouse click for piece selection functions
 					GameBoard.newClick = true;
 					//Find the tile that was clicked in
