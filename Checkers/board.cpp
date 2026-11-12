@@ -1,6 +1,6 @@
 #pragma once
 #include "stdafx.h"
-#include "Board.h"
+#include "board.h"
 
 Board::Board(sf::RenderWindow& window, int height, int width, int tilesInRow, int tilesInCol) {
 	boardH = height;

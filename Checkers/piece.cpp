@@ -334,7 +334,7 @@ void Piece::placePiece(std::vector<Piece*> checkers) {
 			selected = false;
 			//temporarily (debugging purposes) set fill color of moveShape to yellow.
 			if (pieceBlocked) {
-				moveShape.setFillColor(sf::Color::Color(150, 0, 0, 200));
+				moveShape.setFillColor(sf::Color(150, 0, 0, 200));
 			}
 			else if (boardref->tileTypes[boardref->clickPos] != black) {
 				moveShape.setFillColor(sf::Color::White);

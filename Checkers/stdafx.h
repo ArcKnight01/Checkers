@@ -5,10 +5,13 @@
 
 #pragma once
 
+// Windows-only headers: Visual Studio still gets them, other platforms (CMake/g++) skip them
+#ifdef _WIN32
 #include "targetver.h"
+#include <tchar.h>
+#endif
 
 #include <stdio.h>
-#include <tchar.h>
 
 
 
